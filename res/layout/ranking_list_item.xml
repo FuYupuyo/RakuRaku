@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:contentDescription="アイテム画像"
+        android:id="@+id/small_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher" />
+    
+    <TextView
+        android:id="@+id/item_rank_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:scrollHorizontally="true"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/item_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:scrollHorizontally="true"
+        android:textSize="18sp" />
+
+</LinearLayout>
