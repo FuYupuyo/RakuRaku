@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="spinSex">
+        <item>指定なし</item>
+        <item>男性</item>
+        <item>女性</item>
+    </string-array>
+    <string-array name="spinAge">
+        <item>指定なし</item>
+        <item>10代</item>
+        <item>20代</item>
+        <item>30代</item>
+        <item>40代</item>
+        <item>50代</item>
+    </string-array>
+
+</resources>
