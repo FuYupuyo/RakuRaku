@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import own.example.common.Const.ScreenType;
+import own.example.model.UrlParameter;
 import own.example.rakuraku.ItemActivity;
 import own.example.rakuraku.MainActivity;
 import own.example.rakuraku.MemoActivity;
@@ -27,8 +28,8 @@ public class PageDispatcher {
 		// ユーティリティクラスなのでインスタンス化禁止
 	}
 
-	public static void dispatchMainPage(Context context) {
-		dispatchPage(context, ScreenType.SCREEN_TYPE_ACTIVITY_MAIN, null);
+	public static void dispatchMainPage(Context context, UrlParameter obj) {
+		dispatchPage(context, ScreenType.SCREEN_TYPE_ACTIVITY_MAIN, obj);
 	}
 
 	public static void dispatchMemoPage(Context context) {
@@ -54,6 +55,10 @@ public class PageDispatcher {
 		switch (type) {
 		case SCREEN_TYPE_ACTIVITY_MAIN:
 			mIntent = new Intent(ctx, MainActivity.class);
+			if (obj == null) {
+				ctx.startActivity(mIntent);
+			}
+			mIntent.putExtra("parameter", obj.toString());
 			ctx.startActivity(mIntent);
 			break;
 

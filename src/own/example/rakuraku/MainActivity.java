@@ -19,6 +19,7 @@ import own.example.model.RankingData;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
@@ -38,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements
 		OnMenuItemClickListener, OnClickListener {
 	private Activity mActivity;
 	private ListView mListView;
-	private TextView mFavoriteButton;
+	private TextView mSettingButton;
 	private TextView mMemoButton;
 	private RequestQueue mQueue;
 	private JSONArray mItemsArray;
@@ -54,13 +55,17 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 
 		mListView = (ListView) findViewById(R.id.ListView);
-		mFavoriteButton = (TextView) findViewById(R.id.favorite_button);
-		mFavoriteButton.setOnClickListener(this);
+		mSettingButton = (TextView) findViewById(R.id.favorite_button);
+		mSettingButton.setOnClickListener(this);
 		mMemoButton = (TextView) findViewById(R.id.memo_button);
 		mMemoButton.setOnClickListener(this);
 
 		String url = "https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20120927?"
 				+ "format=json&applicationId=1093443291235859235";
+		Intent intent = getIntent();
+		if (intent.getStringExtra("parameter") != null) {
+			url = url + intent.getStringExtra("parameter");
+		}
 
 		mQueue = Volley.newRequestQueue(mActivity);
 
@@ -75,6 +80,7 @@ public class MainActivity extends ActionBarActivity implements
 							Bitmap defaultBitmap = BitmapFactory
 									.decodeResource(getResources(),
 											R.drawable.ic_launcher);
+							Toast.makeText(mActivity, response.getString("title"), Toast.LENGTH_SHORT).show();
 							for (Integer i = 0; i < mItemsArray.length(); i++) {
 								JSONObject Item;
 								Item = mItemsArray.getJSONObject(i)
@@ -102,7 +108,8 @@ public class MainActivity extends ActionBarActivity implements
 											Toast.makeText(mActivity,
 													item.getItemName(),
 													Toast.LENGTH_SHORT).show();
-											PageDispatcher.dispatchItemPage(mActivity, item.getItem());
+											PageDispatcher.dispatchItemPage(
+													mActivity, item.getItem());
 										}
 									});
 						} catch (JSONException e) {
@@ -114,6 +121,7 @@ public class MainActivity extends ActionBarActivity implements
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						Toast.makeText(mActivity, "通信エラーです", Toast.LENGTH_SHORT).show();
 					}
 				});
 		mQueue.add(request);
@@ -123,9 +131,9 @@ public class MainActivity extends ActionBarActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		/** ボタン */
-		MenuItem favoriteActionItem = menu.findItem(R.id.action_favorite);
+		MenuItem favoriteActionItem = menu.findItem(R.id.action_settings);
 		favoriteActionItem.setOnMenuItemClickListener(this);
-		MenuItem settingsActionItem = menu.findItem(R.id.action_settings);
+		MenuItem settingsActionItem = menu.findItem(R.id.action_memo);
 		settingsActionItem.setOnMenuItemClickListener(this);
 		return true;
 	}
@@ -136,13 +144,13 @@ public class MainActivity extends ActionBarActivity implements
 			return false;
 
 		switch (item.getItemId()) {
-		case R.id.action_favorite:
-			Log.d("test", "人気が押されました");
+		case R.id.action_settings:
+			PageDispatcher.dispatchPopularPage(this);
+
 			break;
 
-		case R.id.action_settings:
-			Log.d("test", "設定が押されました");
-			PageDispatcher.dispatchItemPage(this, null);
+		case R.id.action_memo:
+			PageDispatcher.dispatchMemoPage(this);
 			break;
 
 		default:
@@ -156,13 +164,10 @@ public class MainActivity extends ActionBarActivity implements
 		switch (v.getId()) {
 		case R.id.favorite_button:
 			PageDispatcher.dispatchPopularPage(this);
-			Log.d("test", "人気が押されました");
 			break;
 
 		case R.id.memo_button:
 			PageDispatcher.dispatchMemoPage(this);
-			Log.d("test", "メモが押されました");
-
 			break;
 
 		default:
